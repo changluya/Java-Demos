@@ -349,6 +349,18 @@ springcloud案例项目，详细内容见笔记：
 
 
 
+---
+
+# bigdata
+
+## kerberos
+
+### kerberosAuth
+
+kerberos认证体系学习笔记目录位置：
+
+![image-20240710013121486](https://pictured-bed.oss-cn-beijing.aliyuncs.com/img/image-20240710013121486.png)  
+
 
 
 <br/>
