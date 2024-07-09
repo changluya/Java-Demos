@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Jul 07 17:02:41 CST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0190-8c6e-5e76-00005201c298 
+on database directory E:\自学历程\Gitee仓库\demo-exer\bigdata\kerberos\kerberosAuth\kerberosAuth\metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@6d7b001b 
+Loaded from file:/C:/Users/Administrator/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_144-b01
+user.dir=E:\自学历程\Gitee仓库\demo-exer\bigdata\kerberos\kerberosAuth\kerberosAuth
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

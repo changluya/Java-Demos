@@ -6,6 +6,9 @@ import com.changlu.serialize.protobuf.DemoModel;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @Description: 序列号测试工具
  * @Author: changlu
@@ -76,6 +79,12 @@ public class SerializerTest {
         endTime = System.nanoTime();
         System.out.println("  反序列化时间为：" + (endTime - startTime) / 1000000000.0 + "秒");
         System.out.println("=====结束序列化:Protobuf=====" + "\n");
+    }
+
+    @Test
+    public void test01() {
+        List<String> changlu = Collections.singletonList("changlu");
+        System.out.println(changlu);
     }
 
 }

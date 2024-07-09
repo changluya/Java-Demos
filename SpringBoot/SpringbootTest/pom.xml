@@ -23,6 +23,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.cloudera.ImpalaJDBC41</groupId>
+            <artifactId>ImpalaJDBC41</artifactId>
+            <version>2.6.33.1062</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>

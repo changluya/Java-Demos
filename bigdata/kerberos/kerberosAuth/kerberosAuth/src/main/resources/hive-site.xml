@@ -1,0 +1,69 @@
+<configuration>
+ <property>
+  <name>hive.metastore.warehouse.dir</name>
+  <value>/opt/server/hive-3.1.3/warehouse</value>
+ </property>
+ <property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:mysql://node2:3306/hive?createDatabaseIfNotExist=true&amp;useSSL=false</value>
+ </property>
+ <property>
+  <name>javax.jdo.option.ConnectionDriverName</name>
+  <value>com.mysql.jdbc.Driver</value>
+ </property>
+ <property>
+  <name>javax.jdo.option.ConnectionUserName</name>
+  <value>root</value>
+ </property>
+ <property>
+  <name>javax.jdo.option.ConnectionPassword</name>
+  <value>root</value>
+ </property>
+ <!-- hiveserver2 支持kerberos认证 -->
+ <property>
+  <name>hive.server2.authentication</name>
+  <value>KERBEROS</value>
+ </property>
+
+ <!--  hiveserver2 kerberos主体 -->
+ <property>
+  <name>hive.server2.authentication.kerberos.principal</name>
+  <value>hive/node1@EXAMPLE.COM</value>
+ </property>
+
+ <!-- hiveserver2 keytab密钥文件路径 -->
+ <property>
+  <name>hive.server2.authentication.kerberos.keytab</name>
+  <value>/home/keytabs/hive.service.keytab</value>
+ </property>
+
+ <!-- hivemetastore 开启kerberos认证 -->
+ <property>
+  <name>hive.metastore.sasl.enabled</name>
+  <value>true</value>
+ </property>
+
+ <!-- metastore kerberos主体 -->
+ <property>
+  <name>hive.metastore.kerberos.principal</name>
+  <value>hive/node1@EXAMPLE.COM</value>
+ </property>
+
+ <!-- metastore keytab密钥文件路径 -->
+ <property>
+  <name>hive.metastore.kerberos.keytab.file</name>
+  <value>/home/keytabs/hive.service.keytab</value>
+ </property>
+ <property>
+  <name>hive.metastore.warehouse.dir</name>
+  <value>/opt/server/hive-3.1.3/warehouse</value>
+ </property>
+ <property>
+  <name>hive.metastore.local</name>
+  <value>false</value>
+ </property>
+ <property>
+  <name>hive.metastore.uris</name>
+  <value>thrift://node1:9083</value>
+ </property>
+</configuration>
