@@ -1,5 +1,7 @@
 package com.changlu;
 
+import java.sql.Timestamp;
+
 /**
  * @Description:
         * @Author: changlu
@@ -15,11 +17,10 @@ class Son {
 }
 public class Test {
     public static void main(String[] args) {
-//        System.out.println(Long.compare(id, 10));
-        Son son = new Son();
-        Long num = son.num;
-        System.out.println(num);
-//        System.out.println("10".equals(id.toString()));
+        long tt = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(tt);
+        System.out.println(timestamp.getTime());
+        System.out.println(tt);
     }
 }
 enum Student {
