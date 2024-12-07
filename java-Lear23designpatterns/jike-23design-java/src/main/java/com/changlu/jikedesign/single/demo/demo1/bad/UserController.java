@@ -1,4 +1,4 @@
-package com.changlu.jikedesign.single.demo.demo1;
+package com.changlu.jikedesign.single.demo.demo1.bad;
 
 import java.io.IOException;
 

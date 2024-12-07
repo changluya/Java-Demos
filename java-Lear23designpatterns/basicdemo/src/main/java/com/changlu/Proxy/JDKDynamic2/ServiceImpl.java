@@ -1,6 +1,5 @@
 package com.changlu.Proxy.JDKDynamic2;
 
-import xyz.changlu.Proxy.JDKDynamic2.Service;
 
 /**
  * @ClassName ServiceImpl

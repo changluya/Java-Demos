@@ -1,4 +1,4 @@
-package com.changlu.jikedesign.single.demo.demo1;
+package com.changlu.jikedesign.single.demo.demo1.bad;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,6 +14,7 @@ public class Logger {
     }
 
     public void log(String message) throws IOException {
+        // 本身FileWriter就带有对象级别的锁
         writer.write(message);
     }
 
