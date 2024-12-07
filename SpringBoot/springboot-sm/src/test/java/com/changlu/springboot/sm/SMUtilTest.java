@@ -15,10 +15,10 @@ import java.security.KeyPair;
 public class SMUtilTest {
 
     // 生成的一组私钥、公钥进行测试
-    private String privateKey = "308193020100301306072a8648ce3d020106082a811ccf5501822d047930770201010420057ab3e1e512e970023c16c545289ecf37dd2cb202daa24c42936f21daa061aca00a06082a811ccf5501822da14403420004981070e26f624917f2717bcaadc000c928c91b49c9c218df33260cafa1d2243c2427fd3486884a67d390751ff4956e35466fb4b925a666229b22d36c26267d67";
-    private String publicKey = "3059301306072a8648ce3d020106082a811ccf5501822d03420004981070e26f624917f2717bcaadc000c928c91b49c9c218df33260cafa1d2243c2427fd3486884a67d390751ff4956e35466fb4b925a666229b22d36c26267d67";
-    private String publicKeyQ = "04981070e26f624917f2717bcaadc000c928c91b49c9c218df33260cafa1d2243c2427fd3486884a67d390751ff4956e35466fb4b925a666229b22d36c26267d67";
-    private String privateKeyD = "057ab3e1e512e970023c16c545289ecf37dd2cb202daa24c42936f21daa061ac";
+    private String privateKey = "308193020100301306072a8648ce3d020106082a811ccf5501822d047930770201010420410ed06116014ad4460d2018069d94debeef593fd0e3bdc3d57ab8a84f8125e2a00a06082a811ccf5501822da14403420004171cc684596a7fd7dd26ea34ed5a7ea84b8ac124ed8e53432da4a0d1b287adbaea1f320a6db4763190dae57587ea8adf1f4254a250653b419dc64d2df9067d97";
+    private String publicKey = "3059301306072a8648ce3d020106082a811ccf5501822d03420004171cc684596a7fd7dd26ea34ed5a7ea84b8ac124ed8e53432da4a0d1b287adbaea1f320a6db4763190dae57587ea8adf1f4254a250653b419dc64d2df9067d97";
+    private String publicKeyQ = "04171cc684596a7fd7dd26ea34ed5a7ea84b8ac124ed8e53432da4a0d1b287adbaea1f320a6db4763190dae57587ea8adf1f4254a250653b419dc64d2df9067d97";
+    private String privateKeyD = "410ed06116014ad4460d2018069d94debeef593fd0e3bdc3d57ab8a84f8125e2";
 
     // 随机生成的密钥对加密或解密
     @Test
@@ -75,7 +75,7 @@ public class SMUtilTest {
     // 案例2：客户端加密，服务端完成解密
     @Test
     public void testDecrypt() {
-        String encodeStr = "04badafbddce5f728fb11c2007f2230b2fcd0ecf019ac4536370c75dc2e222ca696d20033ab8f76965bd1a9e2691b7a6e4e62d71627874cedd6138453444e1868881e69dbcd3ca13818d6db061561fb87da14e061d9d1c82d550322b2e04c60bcca7998ac51059";
+        String encodeStr = "042690ad14344234388b0b9466d05e46af83ff423c0e0195999fedc28d85b650cde76d3995547a7b071cccef5be1b8a81480de5026940b75e388c23015fea55dec348417ee2e20a82d52c170b3ab040d14cde02531ec649b781e7e4339a9c8e64556c87950ab97";
         String formatStr = SM2Util.decrypt(encodeStr, privateKey, publicKey);
         System.out.println("formatStr=>" + formatStr);
     }
@@ -85,6 +85,22 @@ public class SMUtilTest {
     public void testEncrypt() {
         String str = "changlu test test";
         String encodeStr = SM2Util.encrypt(str, privateKey, publicKey);
+        System.out.println("encodeStr=>" + encodeStr);
+    }
+
+    // 案例2：客户端加密，服务端完成解密
+    @Test
+    public void testDecrypt2() {
+        String encodeStr = "04b0ac2effc5d326b010e6c0507fbab7d7692784167d1f49ba3d53e1e095742f519e49b381d7e97b684e1258aecab853d05dbf8dac3765c929b076c43c4fa069515e9d69ebec48b51ba2e8730f18ccd4367f7f36a2ded725c971986181584f04897065932b79dd2859781fdc38916c27c9fe";
+        String formatStr = SM2Util.decrypt(encodeStr, privateKeyD, publicKeyQ);
+        System.out.println("formatStr=>" + formatStr);
+    }
+
+    // 案例3:服务端进行加密
+    @Test
+    public void testEncrypt2() {
+        String str = "changlu test test";
+        String encodeStr = SM2Util.encrypt(str, privateKeyD, publicKeyQ);
         System.out.println("encodeStr=>" + encodeStr);
     }
 
