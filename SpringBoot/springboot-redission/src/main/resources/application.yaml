@@ -1,0 +1,18 @@
+server:
+  port: 8055
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 1
+    password: 123456
+# 直接配置参数
+#redisson:
+#  codec: org.redisson.codec.JsonJacksonCodec
+#  threads: 4
+#  netty:
+#    threads: 4
+#  single-server-config:
+#    address: "redis://localhost:6379"
+#    password: 123456
+#    database: 0
