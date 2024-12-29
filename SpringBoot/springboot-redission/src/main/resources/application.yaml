@@ -6,6 +6,11 @@ spring:
     port: 6379
     database: 1
     password: 123456
+  datasource:
+    username: root
+    url: jdbc:mysql://localhost:3306/test?setTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
 # 直接配置参数
 #redisson:
 #  codec: org.redisson.codec.JsonJacksonCodec
