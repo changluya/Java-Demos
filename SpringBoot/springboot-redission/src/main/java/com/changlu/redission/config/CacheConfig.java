@@ -20,6 +20,11 @@ public class CacheConfig {
     public RedissonClient redissonClient(){
         Config config = new Config();
         config.setTransportMode(TransportMode.NIO);
+        // 开门狗超时时长
+        long redissionWatchDogTimeoutTime = environmentContext.getRedissionWatchDogTimeoutTime();
+        if (redissionWatchDogTimeoutTime > 0) {
+            config.setLockWatchdogTimeout(redissionWatchDogTimeoutTime);
+        }
         String redisPassword = getRedisPassword();
         int redisDB = environmentContext.getRedisDB();
         // 单节点服务器

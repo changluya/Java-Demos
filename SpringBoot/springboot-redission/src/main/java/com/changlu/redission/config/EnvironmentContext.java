@@ -29,4 +29,8 @@ public class EnvironmentContext {
     public int getRedisPort() {
         return Integer.parseInt(environment.getProperty("spring.redis.port", "6379"));
     }
+
+    public long getRedissionWatchDogTimeoutTime() {
+        return Long.parseLong(environment.getProperty("cl.redission.watchdog.timeout","0"));
+    }
 }
