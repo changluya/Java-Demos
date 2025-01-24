@@ -15,21 +15,15 @@
     </resultMap>
 
     <insert id="insertNextRunForJobs">
-        INSERT INTO schedule_job_expand
-            (`job_id`,`run_num`)
         select
-            DISTINCT last_run.job_id as `job_id`,
-                     last_run.max_run_num + 1
-        from schedule_job_expand sj
-                 INNER JOIN (
-            select job_id, max(run_num) as max_run_num
-            from schedule_job_expand
-            where `job_id` IN
-            <foreach collection="jobIds" close=")" open="(" separator="," item="jobId">
-                #{jobId}
-            </foreach>
-            GROUP BY job_id
-        ) as last_run  on sj.job_id = last_run.job_id
+        `job_id`,
+        max(run_num) + 1 as max_run_num
+        from schedule_job_expand
+        where `job_id` IN
+        <foreach collection="jobIds" close=")" open="(" separator="," item="jobId">
+            #{jobId}
+        </foreach>
+        GROUP BY job_id
     </insert>
 
     <insert id="insertNextRunForJob">

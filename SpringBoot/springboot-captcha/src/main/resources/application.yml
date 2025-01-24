@@ -1,7 +1,14 @@
-server:
-  port: 8756
-
-# easy-captcha配置
-easycaptcha:
-  #  验证码类型配置 查看 LoginProperties 类
-  code-type: arithmetic
+#server:
+#  port: 8756
+#
+## easy-captcha配置
+#easycaptcha:
+#  #  验证码类型配置 查看 LoginProperties 类
+#  code-type: arithmetic
+#
+#sqlparser:
+#  deploy:
+#    mode: local
+#
+#changlu:
+#  test: 123
