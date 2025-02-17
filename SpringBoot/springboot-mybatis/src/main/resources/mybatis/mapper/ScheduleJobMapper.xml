@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.changlu.springbootmybatis.mapper.ScheduleJobMapper">
+
+    <!-- 定义一个结果集，保证pojo中的字段与数据库相符 -->
+    <resultMap id="scheduleJobResultMap" type="com.changlu.springbootmybatis.pojo.ScheduleJob">
+        <!-- 用id属性来映射主键字段 -->
+        <id property="id" column="id"/>
+        <!-- 映射其他字段 -->
+        <result property="projectId" column="project_id"/>
+        <result property="dtuicTenantId" column="dtuic_tenant_id"/>
+        <result property="appType" column="app_type"/>
+        <result property="jobId" column="job_id"/>
+        <result property="cycTime" column="cyc_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="flowJobId" column="flow_job_id"/>
+    </resultMap>
+
+    <!-- 插入数据 -->
+    <insert id="insertScheduleJob" parameterType="com.changlu.springbootmybatis.pojo.ScheduleJob">
+        INSERT INTO schedule_job (project_id, dtuic_tenant_id, app_type, job_id, cyc_time, is_deleted, flow_job_id)
+        VALUES (#{projectId}, #{dtuicTenantId}, #{appType}, #{jobId}, #{cycTime}, #{isDeleted}, #{flowJobId})
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectScheduleJobById" resultMap="scheduleJobResultMap">
+        SELECT * FROM schedule_job WHERE id = #{id}
+    </select>
+
+    <!-- 更新数据 -->
+    <update id="updateScheduleJob" parameterType="com.changlu.springbootmybatis.pojo.ScheduleJob">
+        UPDATE schedule_job
+        SET project_id = #{projectId},
+            dtuic_tenant_id = #{dtuicTenantId},
+            app_type = #{appType},
+            job_id = #{jobId},
+            cyc_time = #{cycTime},
+            is_deleted = #{isDeleted},
+            flow_job_id = #{flowJobId}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteScheduleJobById">
+        DELETE FROM schedule_job WHERE id = #{id}
+    </delete>
+
+    <!-- 查询所有数据 -->
+    <select id="selectAllScheduleJobs"  resultMap="scheduleJobResultMap">
+        SELECT * FROM schedule_job
+    </select>
+
+    <!-- 根据 job_id 和 is_deleted 查询 -->
+    <select id="selectScheduleJobByJobIdAndIsDeleted" resultMap="scheduleJobResultMap">
+        SELECT * FROM schedule_job WHERE job_id = #{jobId} AND is_deleted = #{isDeleted}
+    </select>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsertScheduleJobs" parameterType="java.util.List">
+        INSERT INTO schedule_job (project_id, dtuic_tenant_id, app_type, job_id, cyc_time, is_deleted, flow_job_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId}, #{item.dtuicTenantId}, #{item.appType}, #{item.jobId}, #{item.cycTime}, #{item.isDeleted}, #{item.flowJobId})
+        </foreach>
+    </insert>
+
+    <!-- 新增复杂查询方法 -->
+    <select id="selectJobIds" resultType="java.lang.String">
+        (SELECT job_id FROM schedule_job
+         WHERE cyc_time &gt;= '20250115000000'
+           AND cyc_time &lt;= '20250115235959'
+             LIMIT 40000)
+        UNION ALL
+        (SELECT job_id FROM schedule_job
+         WHERE cyc_time &lt; '20250115000000'
+             LIMIT 4000)
+    </select>
+
+    <!-- 新增复杂查询方法 -->
+    <select id="countByConditions" resultType="int">
+        SELECT COUNT(id)
+        FROM schedule_job
+        WHERE is_deleted = 0
+        AND dtuic_tenant_id = #{dtuicTenantId}
+        AND project_id = #{projectId}
+        AND flow_job_id = #{flowJobId}
+        AND cyc_time &gt;= #{startCycTime}
+        AND cyc_time &lt;= #{endCycTime}
+        AND app_type = #{appType}
+<!--        <if test="jobIds != null and jobIds.size() > 0">-->
+<!--            AND job_id IN-->
+<!--            <foreach collection="jobIds" item="jobId" open="(" separator="," close=")">-->
+<!--                #{jobId}-->
+<!--            </foreach>-->
+<!--        </if>-->
+    </select>
+
+    <!-- 新增复杂查询方法 -->
+    <select id="countByConditions2" resultType="int">
+        SELECT COUNT(id)
+        FROM (
+        SELECT id, job_id
+        FROM schedule_job
+        WHERE is_deleted = 0
+        AND dtuic_tenant_id = #{dtuicTenantId}
+        AND project_id = #{projectId}
+        AND flow_job_id = #{flowJobId}
+        AND cyc_time &gt;= #{startCycTime}
+        AND cyc_time &lt;= #{endCycTime}
+        AND app_type = #{appType}
+        ) AS subquery
+        <if test="jobIds != null and jobIds.size() > 0">
+            WHERE job_id IN
+            <foreach collection="jobIds" item="jobId" open="(" separator="," close=")">
+                #{jobId}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>
