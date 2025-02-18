@@ -26,8 +26,14 @@ public class Main {
         // 7 -> 9
         g.addEdge(7, 9);
 
-        // 成环场景
-        g.addEdge(9, 1);
+        // 成环场景案例
+//        g.addEdge(9, 1);
+        // 添加完边之后，校验是否出现成环问题
+        CycleDetector cycleDetector = new CycleDetector(g, 1);
+        if (cycleDetector.hasCycle()) {
+            System.out.println("dag出现成环问题！请重新编辑");
+            return;
+        }
 
         // 创建拓扑排序对象，并指定起始节点为1
         TopologicalSort ts = new TopologicalSort(g, 1);
