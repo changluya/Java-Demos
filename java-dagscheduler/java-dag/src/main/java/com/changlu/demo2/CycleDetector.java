@@ -51,7 +51,7 @@ public class CycleDetector {
     }
 
     /**
-     * 分析成环原因
+     * 分析成环原因，递归实现
      * 时间复杂度：O(n * n)、空间复杂度O(n)
      */
     private void doProcessAnalysis() {
