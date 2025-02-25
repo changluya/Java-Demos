@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.changlu</groupId>
+        <artifactId>demo-calcite</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>demo-calcite-template</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <calcite.version>1.21.0</calcite.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- 指定插件的artifactId，这里是maven-resources-plugin -->
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!-- 定义插件的执行阶段 -->
+                    <execution>
+                        <!-- 为这个执行阶段设置一个唯一的id -->
+                        <id>copy-fmpp-resources</id>
+                        <!-- 指定这个执行应该在哪个Maven生命周期阶段执行，这里是initialize阶段 -->
+                        <phase>initialize</phase>
+                        <goals>
+                            <!-- 指定要执行的目标 -->
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 配置插件的参数 -->
+                            <outputDirectory>${project.build.directory}/codegen</outputDirectory>
+                            <!-- 定义要复制的资源 -->
+                            <resources>
+                                <resource>
+                                    <!-- 指定资源的目录 -->
+                                    <directory>src/main/codegen</directory>
+                                    <!-- 设置是否对资源文件进行过滤，这里设置为false -->
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- 指定插件的groupId和artifactId，这里是fmpp-maven-plugin -->
+                <groupId>com.googlecode.fmpp-maven-plugin</groupId>
+                <artifactId>fmpp-maven-plugin</artifactId>
+                <version>1.0</version>
+                <dependencies>
+                    <!-- 定义插件依赖 -->
+                    <dependency>
+                        <groupId>org.freemarker</groupId>
+                        <artifactId>freemarker</artifactId>
+                        <version>2.3.28</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>generate-fmpp-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 配置FreeMarker的配置文件位置 -->
+                            <cfgFile>${project.build.directory}/codegen/config.fmpp</cfgFile>
+                            <!-- 指定生成的源代码输出目录 -->
+                            <outputDirectory>target/generated-sources</outputDirectory>
+                            <!-- 指定模板文件的位置 -->
+                            <templateDirectory>${project.build.directory}/codegen/templates</templateDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- 注释说明这个插件必须在fmpp-maven-plugin之后执行 -->
+                <!-- 指定插件的groupId和artifactId，这里是javacc-maven-plugin -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javacc-maven-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <id>javacc</id>
+                        <goals>
+                            <goal>javacc</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 指定JavaCC源文件的目录 -->
+                            <sourceDirectory>${project.build.directory}/generated-sources/</sourceDirectory>
+                            <!-- 指定包含的文件模式 -->
+                            <includes>
+                                <include>**/Parser.jj</include>
+                            </includes>
+                            <!-- 配置JavaCC的lookAhead参数，必须与Apache Calcite保持同步 -->
+                            <lookAhead>1</lookAhead>
+                            <!-- 设置是否生成静态代码，这里设置为false -->
+                            <isStatic>false</isStatic>
+                            <!-- 指定生成的JavaCC代码的输出目录 -->
+                            <outputDirectory>${project.build.directory}/generated-sources/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

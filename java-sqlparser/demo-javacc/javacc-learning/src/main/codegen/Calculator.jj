@@ -1,0 +1,171 @@
+options {
+    STATIC=false;
+}
+
+PARSER_BEGIN(Calculator)
+package com.changlu.javacc.learning.Calculator.parser;
+
+import com.changlu.javacc.learning.Calculator.ast.*;
+
+public class Calculator {
+
+    public Node parse() throws ParseException {
+        return expr();
+    }
+}
+PARSER_END(Calculator)
+
+// 扫描器的描述
+// 这里含义：跳过空格、制表符、回车符
+SKIP :
+{
+    " "
+|   "\r"
+|   "\t"
+}
+
+// TOKEN定义
+// TOKEN定义了如何识别和分类输入字符流中的标记
+// <NUMBER: (<DIGIT>)+ ( "." (<DIGIT>)+ )?>：定义了一个名为NUMBER的标记类型。
+//   它可以匹配一个或多个数字（通过(<DIGIT>)+），可选地后跟一个小数点及一个或多个数字（( "." (<DIGIT>)+ )?）。
+//   含义：允许表示整数和小数
+// <DIGIT: ["0"-"9"]>：定义了一个名为DIGIT的标记类型，它匹配任何一个数字字符（从'0'到'9'）。
+TOKEN :
+{
+    < NUMBER: (<DIGIT>)+ ( "." (<DIGIT>)+ )? >
+|   < DIGIT: ["0"-"9"] >
+|   < EOL: "\n" >
+}
+
+// <SIN: "sin">：定义了一个名为SIN的标记类型，它匹配字符串"sin"，通常代表正弦函数。
+// <COS: "cos">：定义了一个名为COS的标记类型，它匹配字符串"cos"，通常代表余弦函数。
+// <TAN: "tan">：定义了一个名为TAN的标记类型，它匹配字符串"tan"，通常代表正切函数。
+TOKEN:
+{
+    <SIN: "sin">
+|   <COS: "cos">
+|   <TAN: "tan">
+}
+
+
+// 解析器描述
+// expr() 方法：处理加法和减法操作。
+// 第一个{} 定义临时变量
+// 第二个{} 编写解析到指定语法情况转换任务元素值赋值给临时变量
+Node expr():
+{
+    Node left;  // 左侧子节点
+    Node right; // 右侧子节点
+}
+{
+    left=term() // 调用 term() 解析乘法和除法表达式，并将结果赋值给 left。
+    (
+        "+" right=expr()    // 匹配 '+' 操作符，并递归调用 expr() 解析右侧表达式。
+        { return new ExprNode(left, right, Operator.PLUS); } // 创建并返回一个新的 ExprNode 表示加法操作。
+    |   "-" right=expr()    // 或者匹配 '-' 操作符，并递归调用 expr() 解析右侧表达式。
+        { return new ExprNode(left, right, Operator.MINUS); } // 创建并返回一个新的 ExprNode 表示减法操作。
+    )*
+    { return left; } // 如果没有匹配到任何操作符，则直接返回左侧节点 left。
+}
+
+
+// term() 方法：处理乘法和除法操作。
+Node term():
+{
+    Node left; // 左侧子节点
+    Node right; // 右侧子节点
+}
+{
+    left=primary() // 调用 primary() 解析基本元素，并将结果赋值给 left。
+    (
+        "*" right=term()    // 匹配 '*' 操作符，并递归调用 term() 解析右侧表达式。
+        { return new TermNode(left, right, Operator.MUL); } // 创建并返回一个新的 TermNode 表示乘法操作。
+    |   "/" right=term()    // 或者匹配 '/' 操作符，并递归调用 term() 解析右侧表达式。
+        { return new TermNode(left, right, Operator.DIV); } // 创建并返回一个新的 TermNode 表示除法操作。
+    )*
+    { return left; } // 如果没有匹配到任何操作符，则直接返回左侧节点 left。
+}
+
+
+
+// primary解析方法：处理基本元素，如数字、括号内的表达式、负号、阶乘和三角函数。
+//        解析数学表达式中的基本元素（如数字、括号内的表达式、以及一些函数调用）
+Node primary():
+{
+    Token t;
+    Token p;
+    Node n;
+}
+{
+    // 情况1：阶乘操作（如5!）
+    LOOKAHEAD(<NUMBER> "!")  // 确保接下来的输入是NUMBER后跟"!"
+    t=<NUMBER> "!"           // 匹配一个NUMBER类型的Token和随后的"!"
+    {
+        String value = t.image; // 获取Token的字符串表示
+        double number = Double.parseDouble(value);  // 将字符串转换为double
+        return new FactorialNode(new ValueNode(number));  // 返回一个新的阶乘节点
+    }
+|
+    // 情况2：单独的数字
+    t=<NUMBER>
+    {
+        double number = Double.parseDouble(t.image);  // 将NUMBER类型的Token转换为double
+            return new ValueNode(number);  // 返回一个值节点
+    }
+|
+    // 情况3：括号内的表达式后跟阶乘操作（如(3+4)!）
+    LOOKAHEAD("(" n=expr() ")" "!")  // 确保接下来的输入是括号内的表达式后跟"!"
+    "(" n=expr() ")" "!"             // 匹配括号内的表达式和随后的"!"
+    {
+        return new FactorialNode(n);  // 返回一个新的阶乘节点
+    }
+|
+    // 情况4：正号情况（实际上不做任何处理）
+    "+" n=primary()
+    {
+        return n;  // 直接返回子节点
+    }
+|
+    // 情况5：负号情况（保存负号）
+    "-" n=primary()
+    {
+        n.setSign(-1);  // 设置节点的符号为-1
+        return n;       // 返回修改后的节点
+    }
+|
+    // 情况6：括号内的表达式（优先级提升）
+    "(" n=expr() ")"
+    {
+        return n;  // 返回括号内的表达式节点
+    }
+|
+    // 情况7：正弦函数（如sin(x)）
+    <SIN> "(" n=expr() ")"
+    {
+        return new SinNode(n);  // 返回一个新的正弦节点
+    }
+|
+    // 情况8：余弦函数（如cos(x)）
+    <COS> "(" n=expr() ")"
+    {
+        return new CosNode(n);  // 返回一个新的余弦节点
+    }
+|
+    // 情况9：正切函数（如tan(x)）
+    <TAN> "(" n=expr() ")"
+    {
+        return new TanNode(n);  // 返回一个新的正切节点
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
