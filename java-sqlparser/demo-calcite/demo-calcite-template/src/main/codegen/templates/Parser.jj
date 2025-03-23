@@ -16,7 +16,7 @@
  */
 <@pp.dropOutputFile />
 
-<@pp.changeOutputFile name="javacc/Parser.jj" />
+<@pp.changeOutputFile name="javacc/Parser.jjt" />
 
 options {
     STATIC = false;
@@ -111,7 +111,7 @@ import java.util.logging.Logger;
 import static org.apache.calcite.util.Static.RESOURCE;
 
 /**
- * SQL parser, generated from Parser.jj by JavaCC.
+ * SQL parser, generated from Parser.jjt by JavaCC.
  *
  * <p>The public wrapper for this parser is {@link SqlParser}.
  */
@@ -319,13 +319,13 @@ SqlNode FloorCeilOptions(SqlParserPos pos, boolean floorFlag) :
 
 
 
-// End Parser.jj
+// End Parser.jjt
 
 /*
 // This file contains the heart of a parser for SQL SELECT statements.
 // code can be shared between various parsers (for example, a DDL parser and a
 // DML parser) but is not a standalone JavaCC file. You need to prepend a
-// parser declaration (such as that in Parser.jj).
+// parser declaration (such as that in Parser.jjt).
 */
 
 /* Epsilon */

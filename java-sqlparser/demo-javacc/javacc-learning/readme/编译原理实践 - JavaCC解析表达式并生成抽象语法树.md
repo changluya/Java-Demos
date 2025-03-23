@@ -474,7 +474,7 @@ public class CalculateVisitor implements ASTVisitor<Double> {
 
 **本地案例demo**：实现内容为 **语义定义->语法解析->抽象语法树->计算-> 遍历语法**
 
-
+gitee：https://gitee.com/changluJava/demo-exer/tree/master_java_sqlparser/java-sqlparser
 
 ![image-20250225172246702](https://pictured-bed.oss-cn-beijing.aliyuncs.com/img/2024/202502251722794.png)
 

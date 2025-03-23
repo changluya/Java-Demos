@@ -5,6 +5,7 @@ options {
 PARSER_BEGIN(Calculator)
 package com.changlu.javacc.learning.Calculator.parser;
 
+// 指定返回node的类全路径
 import com.changlu.javacc.learning.Calculator.ast.*;
 
 public class Calculator {

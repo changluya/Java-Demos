@@ -1,0 +1,115 @@
+options {
+    STATIC = false; // 动态生成解析器
+}
+
+PARSER_BEGIN(SQLParser)
+import java.io.*;
+public class SQLParser {
+    public static void main(String[] args) throws ParseException, IOException {
+        for (String arg : args) {
+            Reader reader = new StringReader(arg);
+            SQLParser parser = new SQLParser(reader);
+            parser.sqlQuery();
+            System.out.println("Parsing completed successfully.");
+        }
+    }
+}
+PARSER_END(SQLParser)
+
+// 定义词法规则
+SKIP : {
+    " " | "\t" | "\n" | "\r"  // 跳过空白字符
+}
+
+TOKEN : {
+    < SELECT: "select" >
+    | < FROM: "from" >
+    | < WHERE: "where" >
+    | < IDENTIFIER: (["a"-"z", "A"-"Z"])+ >
+    | < NUMBER: (["0"-"9"])+ >
+    | < ASTERISK: "*" >  // 添加对 * 的支持
+}
+
+// 定义 SQL 查询的语法规则
+void sqlQuery() :
+{}
+{
+    <SELECT>
+    ( columnListOrAsterisk() )
+    <FROM> tableName()
+    [ whereClause() ] <EOF>
+    {
+        System.out.println("Parsed SQL Query");
+    }
+}
+
+// 列表规则或 *
+void columnListOrAsterisk() :
+{}
+{
+    <ASTERISK> { System.out.println("Column: *"); }
+    |
+    columnList()
+}
+
+// 列表规则
+void columnList() :
+{}
+{
+    columnName() ( "," columnName() )*
+}
+
+// 单个列名规则
+void columnName() :
+{}
+{
+    <IDENTIFIER>
+    {
+        // 没有定义变量的场景，默认匹配到的单词为token
+        Token t = token;
+        System.out.println("Column: " + t.image
+                           + ", Line: " + t.beginLine + ", end Line：" + t.endLine
+                           + ", beginColumn: " + t.beginColumn + ", endColumn：" + t.endColumn);
+    }
+}
+
+// 表名规则
+void tableName() :
+{}
+{
+    <IDENTIFIER>
+    {
+        // 没有定义变量的场景，默认匹配到的单词为token
+        Token t = token;
+        System.out.println("Table: " + t.image
+                           + ", Line: " + t.beginLine + ", end Line：" + t.endLine
+                           + ", beginColumn: " + t.beginColumn + ", endColumn：" + t.endColumn);
+    }
+}
+
+// WHERE 子句规则
+void whereClause() :
+{}
+{
+    <WHERE> condition()
+}
+
+// 条件规则
+void condition() :
+{
+   // 如果某个方法中涉及到多个变量获取打印情况，则可以使用如下变量定义
+   Token identifierToken, numberToken;
+}
+{
+    // 读取值方式为： 变量名=<token> 匹配相应字符
+    identifierToken=<IDENTIFIER> "=" numberToken=<NUMBER>
+    {
+        System.out.println("Condition: " + identifierToken.image + " = " + numberToken.image);
+        System.out.println("identifierToken: " + identifierToken.image
+                           + ", Line: " + identifierToken.beginLine + ", end Line：" + identifierToken.endLine
+                           + ", beginColumn: " + identifierToken.beginColumn + ", endColumn：" + identifierToken.endColumn);
+        System.out.println("numberToken: " + numberToken.image
+                           + ", Line: " + numberToken.beginLine + ", end Line：" + numberToken.endLine
+                           + ", beginColumn: " + numberToken.beginColumn + ", endColumn：" + numberToken.endColumn);
+    }
+}
