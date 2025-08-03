@@ -1,0 +1,17 @@
+spring:
+  ai:
+    mcp:
+      client:
+        stdio:
+          # ??servers.json??
+#          servers-configuration: classpath:mcp-servers.json
+          root-change-notification: true
+          connections:
+            server1:
+              command: /path/to/server
+              args:
+                - --port=8080
+                - --mode=production
+              env:
+                API_KEY: your-api-key
+                DEBUG: "true"

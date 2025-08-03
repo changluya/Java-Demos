@@ -1,0 +1,346 @@
+options {
+    STATIC = false;
+}
+
+PARSER_BEGIN(SQLParser)
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+// 位置信息类
+class TokenPosition {
+    public final int startLine;
+    public final int startColumn;
+    public final int endLine;
+    public final int endColumn;
+
+    public TokenPosition(int startLine, int startColumn, int endLine, int endColumn) {
+        this.startLine = startLine;
+        this.startColumn = startColumn;
+        this.endLine = endLine;
+        this.endColumn = endColumn;
+    }
+
+    public TokenPosition(Token token) {
+        this(token.beginLine, token.beginColumn, token.endLine, token.endColumn);
+    }
+
+    @Override
+    public String toString() {
+        return "[" + startLine + ":" + startColumn + "-" + endLine + ":" + endColumn + "]";
+    }
+}
+
+// 语法树节点接口
+interface ASTNode {
+    void accept(ASTVisitor visitor);
+    TokenPosition getPosition();
+}
+
+// SELECT语句节点
+class SelectStatement implements ASTNode {
+    public final TokenPosition position;
+    public final List<Column> columns;
+    public final Table table;
+    public final Condition whereCondition;
+
+    public SelectStatement(TokenPosition position, List<Column> columns, Table table, Condition whereCondition) {
+        this.position = position;
+        this.columns = columns;
+        this.table = table;
+        this.whereCondition = whereCondition;
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public TokenPosition getPosition() {
+        return position;
+    }
+}
+
+// 列节点
+class Column implements ASTNode {
+    public final TokenPosition position;
+    public final String name;
+
+    public Column(TokenPosition position, String name) {
+        this.position = position;
+        this.name = name;
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public TokenPosition getPosition() {
+        return position;
+    }
+}
+
+// 表节点
+class Table implements ASTNode {
+    public final TokenPosition position;
+    public final String name;
+
+    public Table(TokenPosition position, String name) {
+        this.position = position;
+        this.name = name;
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public TokenPosition getPosition() {
+        return position;
+    }
+}
+
+// WHERE条件节点
+class Condition implements ASTNode {
+    public final TokenPosition position;
+    public final Column column;
+    public final String value;
+    public final TokenPosition valuePosition;
+
+    public Condition(TokenPosition position, Column column, String value, TokenPosition valuePosition) {
+        this.position = position;
+        this.column = column;
+        this.value = value;
+        this.valuePosition = valuePosition;
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public TokenPosition getPosition() {
+        return position;
+    }
+}
+
+// 访问者接口
+interface ASTVisitor {
+    void visit(SelectStatement select);
+    void visit(Column column);
+    void visit(Table table);
+    void visit(Condition condition);
+}
+
+// 示例访问者实现
+class PrintVisitor implements ASTVisitor {
+    private int indent = 0;
+
+    private String getIndent() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < indent; i++) {
+            sb.append("  ");
+        }
+        return sb.toString();
+    }
+
+    private String formatPosition(TokenPosition pos) {
+        return " " + pos;
+    }
+
+    @Override
+    public void visit(SelectStatement select) {
+        System.out.println(getIndent() + "SELECT" + formatPosition(select.position));
+        indent++;
+        for (Column col : select.columns) {
+            col.accept(this);
+        }
+        select.table.accept(this);
+        if (select.whereCondition != null) {
+            select.whereCondition.accept(this);
+        }
+        indent--;
+    }
+
+    @Override
+    public void visit(Column column) {
+        System.out.println(getIndent() + "COLUMN: " + column.name + formatPosition(column.position));
+    }
+
+    @Override
+    public void visit(Table table) {
+        System.out.println(getIndent() + "FROM " + table.name + formatPosition(table.position));
+    }
+
+    @Override
+    public void visit(Condition condition) {
+        System.out.println(getIndent() + "WHERE " +
+            condition.column.name + " = " + condition.value +
+            formatPosition(condition.position) +
+            " (value at" + formatPosition(condition.valuePosition) + ")");
+    }
+}
+
+public class SQLParser {
+    private SelectStatement selectStatement;
+
+    public SelectStatement getAST() {
+        return selectStatement;
+    }
+
+    public static void main(String[] args) throws ParseException, IOException {
+        String sql = args.length > 0 ? args[0] : "select id, name from users where id = 1";
+        Reader reader = new StringReader(sql);
+        SQLParser parser = new SQLParser(reader);
+
+        try {
+            parser.sqlQuery();
+            System.out.println("Parsing completed successfully.");
+
+            SelectStatement ast = parser.getAST();
+            System.out.println("\nAbstract Syntax Tree with Positions:");
+            ast.accept(new PrintVisitor());
+
+        } catch (ParseException e) {
+            System.err.println("SQL parse error: " + e.getMessage());
+        }
+    }
+}
+PARSER_END(SQLParser)
+
+// 词法规则
+SKIP : { " " | "\t" | "\n" | "\r" }
+TOKEN : {
+    < SELECT: "select" >
+    | < FROM: "from" >
+    | < WHERE: "where" >
+    | < IDENTIFIER: (["a"-"z","A"-"Z"])+ >
+    | < NUMBER: (["0"-"9"])+ >
+    | < ASTERISK: "*" >
+}
+
+// 语法规则
+void sqlQuery() :
+{
+    Token selectToken;
+    List<Column> columns = new ArrayList<>();
+    Table table;
+    Condition whereCondition = null;
+    TokenPosition selectPosition;
+}
+{
+    selectToken = <SELECT>
+    columns = columnListOrAsterisk(selectToken)
+    <FROM>  // Explicitly consume FROM token
+    table = tableName()
+    [ whereCondition = whereClause() ] <EOF>
+    {
+        selectPosition = new TokenPosition(
+            selectToken.beginLine, selectToken.beginColumn,
+            token.endLine, token.endColumn
+        );
+        selectStatement = new SelectStatement(selectPosition, columns, table, whereCondition);
+    }
+}
+
+List<Column> columnListOrAsterisk(Token selectToken) :
+{
+    List<Column> columns = new ArrayList<>();
+    Token token;
+}
+{
+    (
+        token = <ASTERISK>
+        {
+            columns.add(new Column(new TokenPosition(token), "*"));
+        }
+        |
+        columns = columnList()
+    )
+    { return columns; }
+}
+
+List<Column> columnList() :
+{
+    List<Column> columns = new ArrayList<>();
+    Column column;
+}
+{
+    column = columnName() { columns.add(column); }
+    ( "," column = columnName() { columns.add(column); } )*
+    { return columns; }
+}
+
+Column columnName() :
+{
+    Token t;
+}
+{
+    t = <IDENTIFIER>
+    {
+        return new Column(new TokenPosition(t), t.image);
+    }
+}
+
+Table tableName() :
+{
+    Token t;
+}
+{
+    t = <IDENTIFIER>  // Just parse the identifier, FROM is already handled
+    {
+        return new Table(new TokenPosition(t), t.image);
+    }
+}
+
+Condition whereClause() :
+{
+    Token whereToken;
+    Condition condition;
+}
+{
+    whereToken = <WHERE> condition = condition()
+    {
+        return condition;
+    }
+}
+
+Condition condition() :
+{
+    Column column;
+    Token operator, valueToken;
+    String value;
+}
+{
+    column = columnName()
+    operator = "="
+    (
+        valueToken = <NUMBER>
+        {
+            value = valueToken.image;
+        }
+        |
+        valueToken = <IDENTIFIER>
+        {
+            value = valueToken.image;
+        }
+    )
+    {
+        return new Condition(
+            new TokenPosition(
+                column.getPosition().startLine,
+                column.getPosition().startColumn,
+                valueToken.endLine,
+                valueToken.endColumn
+            ),
+            column,
+            value,
+            new TokenPosition(valueToken)
+        );
+    }
+}

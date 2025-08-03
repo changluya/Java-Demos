@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: spring-ai-alibaba-rag-milvus-example
+
+  ai:
+    model:
+      embedding: ollama  # 指定使用 Ollama 的嵌入模型
+    ollama:
+      base-url: http://localhost:11434  # Ollama 服务地址
+      embedding:
+        model: bge-m3  # 指定嵌入模型为 bge-m3
+      chat:
+        enabled: false  # 禁用 Ollama 的聊天功能（避免与 Dashscope 冲突）
+
+    dashscope:
+      embedding:
+        enabled: false  # 禁用 DashScope 的嵌入功能
+      chat:
+        enabled: true   # 保留 DashScope 的聊天功能（如果需要）
+      api-key: ${DASH_SCOPE_API_KEY}  # 仅用于聊天（非嵌入）
+
+    vectorstore:
+      # Milvus 向量数据库配置
+      milvus:
+        client:
+          host: ${MILVUS_HOST:localhost} # default: localhost
+          port: ${MILVUS_PORT:19530} # default: 19530
+          username: ${MILVUS_USERNAME:root} # default: root
+          password: ${MILVUS_PASSWORD:123456} # default: 123456
+        databaseName: ${MILVUS_DATABASE_NAME:default} # default: default。数据库名，类似 MySQL 的 Schema
+        collectionName: ${MILVUS_COLLECTION_NAME:vector_store} # default: vector_store。集合名，类似 MySQL 的表
+        embeddingDimension: 1024 # default: 1536。向量维度，默认 1536（适合 OpenAI 或 DashScope 的嵌入模型）。ollama中的bge-m3向量纬度为1024
+        indexType: IVF_FLAT # default: IVF_FLAT。索引类型，默认 IVF_FLAT（平衡查询速度和精度）
+        metricType: COSINE # default: COSINE。相似度度量方式，默认 COSINE（余弦相似度）
+
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    io.milvus: DEBUG

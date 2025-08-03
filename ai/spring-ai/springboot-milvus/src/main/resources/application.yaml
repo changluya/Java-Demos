@@ -1,0 +1,14 @@
+server:
+  port: 8080
+# Milvus数据库配置
+milvus:
+  host: 127.0.0.1
+  port: 19530
+
+spring:
+  profiles:
+    active: ollama
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB

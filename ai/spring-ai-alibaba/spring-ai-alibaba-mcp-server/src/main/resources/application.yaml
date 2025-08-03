@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        name: my-weather-server
+        version: 0.0.1
+        type: ASYNC  # Recommended for reactive applications
+        # ?? sse ????????? /sse
+        # ???????? ip:port/sse/mcp
+        sse-endpoint: /sse
+        sse-message-endpoint: /mcp
+        capabilities:
+          tool: true
+          resource: true
+          prompt: true
+          completion: true

@@ -10,7 +10,12 @@ import org.apache.hadoop.hive.ql.parse.ParseException;
 public class Demo1 {
     public static void main(String[] args) {
         ParseDriver parseDriver = new ParseDriver();
-        String sql = "select * from test";
+        String sql = "SELECT * \n" +
+                "FROM batch63.sales_order_details \n" +
+                "WHERE quantity IN (\n" +
+                "    SELECT MAX(quantity) \n" +
+                "    FROM batch63.sales_order_details\n" +
+                ")";
         ASTNode root = null;
         try {
             // 解析sql为node语法树

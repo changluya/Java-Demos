@@ -67,9 +67,11 @@ void columnName() :
     {
         // 没有定义变量的场景，默认匹配到的单词为token
         Token t = token;
+        System.out.println("=======column=======");
         System.out.println("Column: " + t.image
                            + ", Line: " + t.beginLine + ", end Line：" + t.endLine
                            + ", beginColumn: " + t.beginColumn + ", endColumn：" + t.endColumn);
+        System.out.println("==============");
     }
 }
 
@@ -81,9 +83,11 @@ void tableName() :
     {
         // 没有定义变量的场景，默认匹配到的单词为token
         Token t = token;
+        System.out.println("=======table=======");
         System.out.println("Table: " + t.image
                            + ", Line: " + t.beginLine + ", end Line：" + t.endLine
                            + ", beginColumn: " + t.beginColumn + ", endColumn：" + t.endColumn);
+        System.out.println("=======table=======");
     }
 }
 
@@ -104,6 +108,7 @@ void condition() :
     // 读取值方式为： 变量名=<token> 匹配相应字符
     identifierToken=<IDENTIFIER> "=" numberToken=<NUMBER>
     {
+        System.out.println("=======condition=======");
         System.out.println("Condition: " + identifierToken.image + " = " + numberToken.image);
         System.out.println("identifierToken: " + identifierToken.image
                            + ", Line: " + identifierToken.beginLine + ", end Line：" + identifierToken.endLine
@@ -111,5 +116,6 @@ void condition() :
         System.out.println("numberToken: " + numberToken.image
                            + ", Line: " + numberToken.beginLine + ", end Line：" + numberToken.endLine
                            + ", beginColumn: " + numberToken.beginColumn + ", endColumn：" + numberToken.endColumn);
+        System.out.println("=======condition=======");
     }
 }

@@ -16,6 +16,9 @@
         <module>demo-hive</module>
         <module>demo-Antlr</module>
         <module>demo-Antlr/demo-Antlr4-demo</module>
+        <module>demo-Antlr/demo-Antlr4-superior-sql-parser</module>
+        <module>demo-Antlr/demo-Antlr4-grammars-v4</module>
+        <module>demo-beetl</module>
     </modules>
 
     <properties>
