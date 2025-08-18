@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8999
 
 langchain4j:
   community:
@@ -16,3 +16,10 @@ langchain4j:
       embedding-model:
         api-key: ${DASH_SCOPE_API_KEY}
         model-name: text-embedding-v3
+  # 内部自部署模型
+  xInference:
+    chat-model:
+      # ==Xorbits Inference==
+      # 非思考模型
+      base-url: http://172.16.99.68:9997
+      model-name: dt_gptq_qwen_int8

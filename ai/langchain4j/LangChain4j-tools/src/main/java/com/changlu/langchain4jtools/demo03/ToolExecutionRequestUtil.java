@@ -109,4 +109,14 @@ class ToolExecutionRequestUtil {
     public static boolean isNullOrBlank(String string) {
         return string == null || string.trim().isEmpty();
     }
+
+    /**
+     * Convert map to JSON string.
+     *
+     * @param map the map to convert
+     * @return JSON string
+     */
+    static String toJson(Map<String, Object> map) {
+        return Json.toJson(map);
+    }
 }
