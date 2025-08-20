@@ -22,4 +22,13 @@ public class EnvironmentContext {
     public String getDashScopeModelName() {
         return environment.getRequiredProperty("langchain4j.community.dashscope.chat-model.model-name");
     }
+
+    // Xorbits Inference
+    public String getXInferenceBaseUrl() {
+        return environment.getRequiredProperty("langchain4j.xInference.chat-model.base-url");
+    }
+
+    public String getXInferenceModelName() {
+        return environment.getRequiredProperty("langchain4j.xInference.chat-model.model-name");
+    }
 }

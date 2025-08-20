@@ -10,7 +10,7 @@ import { streamService } from '@/utils/request'
  */
 export function chatStream(sessionId, message, mode, onDownloadProgress) {
     return streamService({
-        url: '/knowledge/chatStream',
+        url: '/demo03/chat',
         method: 'post',
         data: { sessionId, message, mode },
         responseType: 'stream',

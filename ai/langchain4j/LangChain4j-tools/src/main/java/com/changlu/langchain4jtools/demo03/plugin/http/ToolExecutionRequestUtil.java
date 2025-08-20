@@ -1,4 +1,4 @@
-package com.changlu.langchain4jtools.demo03;
+package com.changlu.langchain4jtools.demo03.plugin.http;
 
 import dev.langchain4j.internal.Json;
 
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * @author changlu
  * @date 2025/8/17 22:57
  */
-class ToolExecutionRequestUtil {
+public class ToolExecutionRequestUtil {
 
     private static final Pattern TRAILING_COMMA_PATTERN = Pattern.compile(",(\\s*[}\\]])");
     private static final Pattern LEADING_TRAILING_QUOTE_PATTERN = Pattern.compile("^\"|\"$");
@@ -108,5 +108,15 @@ class ToolExecutionRequestUtil {
      */
     public static boolean isNullOrBlank(String string) {
         return string == null || string.trim().isEmpty();
+    }
+
+    /**
+     * Convert map to JSON string.
+     *
+     * @param map the map to convert
+     * @return JSON string
+     */
+    public static String toJson(Map<String, Object> map) {
+        return Json.toJson(map);
     }
 }
