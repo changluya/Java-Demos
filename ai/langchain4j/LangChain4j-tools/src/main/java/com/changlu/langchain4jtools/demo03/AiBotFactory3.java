@@ -19,13 +19,13 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import java.util.*;
 
 /**
- * @description Ai Bot factory class with enhanced HTTP tool support including default values
+ * @description Ai Bot factory class with HTTP tool support
  */
 public class AiBotFactory3 {
 
     public static AiAssistant buildAiAssistant() {
         EnvironmentContext env = SpringUtil.getBean(EnvironmentContext.class);
-
+        
         QwenStreamingChatModel qwenStreamingChatModel = QwenStreamingChatModel.builder()
                 .apiKey(env.getDashScopeApiKey())
                 .modelName(env.getDashScopeModelName())
@@ -158,4 +158,5 @@ public class AiBotFactory3 {
                         .build())
                 .build();
     }
+
 }
