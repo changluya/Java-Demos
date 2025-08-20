@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
  */
 public class CalculatorTools2 {
 
-    double sum(Double a, Double b) {
+    public double sum(Double a, Double b) {
         System.out.println("调用加法运算 ");
         return a + b;
     }
 
-    double squareRoot(Double x) {
+    public double squareRoot(Double x) {
         System.out.println("调用平方根运算 ");
         return Math.sqrt(x);
     }

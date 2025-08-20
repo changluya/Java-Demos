@@ -19,12 +19,6 @@ import java.util.stream.Collectors;
  * - Header 参数（请求头参数）
  * 支持参数映射和默认值配置
  */
-/**
- * HTTP 工具执行器，支持智能判断请求体类型：
- * 1. 当存在BODY类型参数时，自动使用JSON请求体
- * 2. GET/DELETE方法强制使用查询参数
- * 3. 其他方法(POST/PUT/PATCH)根据参数类型自动选择
- */
 @Slf4j
 public class HttpToolExecutor implements ToolExecutor {
 

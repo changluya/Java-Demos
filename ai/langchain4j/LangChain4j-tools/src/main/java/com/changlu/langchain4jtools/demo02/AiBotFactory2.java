@@ -89,7 +89,7 @@ public class AiBotFactory2 {
 
     private static JsonObjectSchema buildSqrtJsonObjectSchema() {
         // 定义的参数 & 类型
-        String param1 = "x";
+        String param1 = "arg0";
         Map<String, JsonSchemaElement> properties = new HashMap<>();
         properties.put(param1, JsonNumberSchema.builder().description("需要计算平方根的数字").build());
 
@@ -125,8 +125,9 @@ public class AiBotFactory2 {
      */
     private static JsonObjectSchema buildSumJsonObjectSchema() {
         // 定义的参数 & 类型
-        String param1 = "a";
-        String param2 = "b";
+        // 底层是根据method.getParameters()获取到的名字，所以这里直接使用arg0、arg1
+        String param1 = "arg0";
+        String param2 = "arg1";
         Map<String, JsonSchemaElement> properties = new HashMap<>();
         properties.put(param1, JsonNumberSchema.builder().description("加数1").build());
         properties.put(param2, JsonNumberSchema.builder().description("加数2").build());

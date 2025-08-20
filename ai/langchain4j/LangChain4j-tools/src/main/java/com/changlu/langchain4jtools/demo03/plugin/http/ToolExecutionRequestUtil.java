@@ -116,7 +116,7 @@ public class ToolExecutionRequestUtil {
      * @param map the map to convert
      * @return JSON string
      */
-    static String toJson(Map<String, Object> map) {
+    public static String toJson(Map<String, Object> map) {
         return Json.toJson(map);
     }
 }

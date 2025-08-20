@@ -11,11 +11,6 @@ langchain4j:
 #        model-name: qwen-plus
         model-name: qwen3-30b-a3b-instruct-2507
         # deepseek
-      #        model-name: deepseek-r1
-      #        model-name: deepseek-v3
-      embedding-model:
-        api-key: ${DASH_SCOPE_API_KEY}
-        model-name: text-embedding-v3
   # 内部自部署模型
   xInference:
     chat-model:

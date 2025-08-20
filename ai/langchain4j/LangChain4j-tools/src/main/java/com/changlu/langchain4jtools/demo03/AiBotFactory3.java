@@ -19,13 +19,13 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import java.util.*;
 
 /**
- * @description Ai Bot factory class with HTTP tool support
+ * @description Ai Bot factory class with enhanced HTTP tool support including default values
  */
 public class AiBotFactory3 {
 
     public static AiAssistant buildAiAssistant() {
         EnvironmentContext env = SpringUtil.getBean(EnvironmentContext.class);
-        
+
         QwenStreamingChatModel qwenStreamingChatModel = QwenStreamingChatModel.builder()
                 .apiKey(env.getDashScopeApiKey())
                 .modelName(env.getDashScopeModelName())
@@ -67,7 +67,8 @@ public class AiBotFactory3 {
 
         // 定义静态请求头
         Map<String, String> staticHeaders = new HashMap<>();
-        staticHeaders.put("X-API-KEY", "d420dbfcefdd0cf0261ba09f5a91dc4a35933c59");
+        String apiKey = System.getenv("SERPER_KEY");
+        staticHeaders.put("X-API-KEY", apiKey);
         staticHeaders.put("Content-Type", "application/json");
 
         // 封装http插件，目前这里就一个插件
@@ -158,5 +159,4 @@ public class AiBotFactory3 {
                         .build())
                 .build();
     }
-
 }
